@@ -99,9 +99,11 @@ class Abortable(Middleware):
 
         event = self.backend.poll(self.id_to_key(message.message_id, AbortMode.CANCEL))
         if event:
+            message.options["aborted_or_skipped"] = True
             raise SkipMessage()
 
         self.manager.add_abortable(message.message_id)
+        message.options["aborted_or_skipped"] = True
 
     def after_process_message(
         self,
